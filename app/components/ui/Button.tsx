@@ -30,6 +30,22 @@ export default function Button({
   return (
     <button
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
+      style={{
+        padding: sizes[size].includes("px-6")
+          ? "12px 24px"
+          : sizes[size].includes("px-4")
+            ? "10px 16px"
+            : "8px 12px",
+        background:
+          variant === "primary"
+            ? "#2b2b8a"
+            : variant === "secondary"
+              ? "#6b7280"
+              : "transparent",
+        color: variant === "outline" ? "#111827" : "#ffffff",
+        border: variant === "outline" ? "1px solid #d1d5db" : "none",
+        borderRadius: 8,
+      }}
       {...props}
     >
       {children}
