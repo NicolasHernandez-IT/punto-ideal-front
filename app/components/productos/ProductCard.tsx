@@ -1,12 +1,12 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Product } from '@/app/types';
-import { formatPrice } from '@/app/lib/formatters';
-import { hasStock } from '@/app/lib/utils';
+import { Product } from "../../types";
+import { formatPrice, hasStock } from "../../lib/index";
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
+import { design } from "../../lib/design";
 
 interface ProductCardProps {
   product: Product;
@@ -19,20 +19,21 @@ export default function ProductCard({ product }: ProductCardProps) {
     : product.precio;
 
   return (
-    <Card className="flex flex-col h-full">
+    <Card
+      className="flex flex-col h-full hover:shadow-lg transition-shadow duration-200"
+      style={{ minHeight: 460 }}
+    >
       <Link href={`/productos/${product.id}`} className="block">
-        <div className="relative aspect-square mb-4">
+        <div className="relative mb-4 w-full" style={{ paddingTop: "100%" }}>
           <Image
-            src={product.imagen || '/images/products/placeholder.png'}
+            src={product.imagen || "/images/products/placeholder.png"}
             alt={product.nombre}
             fill
-            className="object-cover rounded"
+            className="absolute inset-0 object-cover rounded-lg"
           />
           {product.enOferta && (
             <div className="absolute top-2 right-2">
-              <Badge variant="danger">
-                -{product.porcentajeDescuento}%
-              </Badge>
+              <Badge variant="danger">-{product.porcentajeDescuento}%</Badge>
             </div>
           )}
           {!inStock && (
@@ -42,13 +43,36 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
 
-        <h3 className="font-semibold text-lg mb-2 line-clamp-2">
-          {product.nombre}
-        </h3>
-        
-        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-          {product.descripcion}
-        </p>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            flex: 1,
+            justifyContent: "flex-start",
+          }}
+        >
+          <h3
+            className="font-semibold text-lg mb-2"
+            style={{ color: design.colors.primary }}
+          >
+            {product.nombre}
+          </h3>
+
+          <p
+            className="text-sm mb-3"
+            style={{
+              color: design.colors.muted,
+              display: "-webkit-box",
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              wordBreak: "break-word",
+              overflowWrap: "break-word",
+            }}
+          >
+            {product.descripcion}
+          </p>
+        </div>
 
         <div className="mt-auto">
           <div className="mb-3">
@@ -68,12 +92,8 @@ export default function ProductCard({ product }: ProductCardProps) {
             )}
           </div>
 
-          <Button
-            variant="primary"
-            className="w-full"
-            disabled={!inStock}
-          >
-            {inStock ? 'Agregar al Carrito' : 'Sin Stock'}
+          <Button variant="primary" className="w-full" disabled={!inStock}>
+            {inStock ? "Agregar al Carrito" : "Sin Stock"}
           </Button>
         </div>
       </Link>
